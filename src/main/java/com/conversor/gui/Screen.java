@@ -26,13 +26,17 @@ public class Screen extends javax.swing.JFrame {
         initComponents();
     }
 
+    public static boolean validarDatos(String cantidad) {
+        return cantidad.matches("[0.0000-9.0000000]{1,1000000}");
+    }
+
     public String[] getTipoConversor(String datos) {
-        
+
         if (this.conversor.getSelectedIndex() == 1) {
             elementos = 6;
-        } else if(this.conversor.getSelectedIndex() == 2) {
+        } else if (this.conversor.getSelectedIndex() == 2) {
             elementos = 3;
-        } else if(this.conversor.getSelectedIndex() == 0) {
+        } else if (this.conversor.getSelectedIndex() == 0) {
             elementos = 1;
         }
         String[] tipoConversor = new String[elementos];
@@ -52,7 +56,7 @@ public class Screen extends javax.swing.JFrame {
             tipoConversor[1] = "Farenheit";
             tipoConversor[2] = "Kelvin";
         }
-        
+
         if (datos.equalsIgnoreCase("Seleccionar")) {
             tipoConversor[0] = "Seleccionar";
         }
@@ -246,36 +250,43 @@ public class Screen extends javax.swing.JFrame {
         tipoConversor = conversor.getSelectedIndex();
         ConversorMonedas conversorSeleccionado = new ConversorMonedas();
 
-        switch (tipoConversor) {
-            case 1 -> {
-                conversorSeleccionado = new ConversorMonedas();
-                cantidad = Float.parseFloat(txtConvertir.getText());
-                de = combo2.getSelectedIndex();
-                a = combo3.getSelectedIndex();
+        txtConvertir.getText();
+
+        if (!validarDatos(txtConvertir.getText().trim())) {
+            JOptionPane.showMessageDialog(null, "No se aceptan letras o caracteres especiales");
+        } else {
+
+            switch (tipoConversor) {
+                case 1 -> {
+                    conversorSeleccionado = new ConversorMonedas();
+                    cantidad = Float.parseFloat(txtConvertir.getText());
+                    de = combo2.getSelectedIndex();
+                    a = combo3.getSelectedIndex();
+                }
+                case 2 -> {
+                    conversorSeleccionado = new ConversorTemperatura();
+                    cantidad = Float.parseFloat(txtConvertir.getText());
+                    de = combo2.getSelectedIndex();
+                    a = combo3.getSelectedIndex();
+                }
+                default ->
+                    JOptionPane.showMessageDialog(null, "Seleccione un conversor a utilizar");
             }
-            case 2 -> {
-                conversorSeleccionado = new ConversorTemperatura();
-                cantidad = Float.parseFloat(txtConvertir.getText());
-                de = combo2.getSelectedIndex();
-                a = combo3.getSelectedIndex();
+
+            conversorSeleccionado.setCantidad(cantidad);
+            conversorSeleccionado.setDe(de);
+            conversorSeleccionado.setA(a);
+            conversorSeleccionado.convertir();
+
+            switch (tipoConversor) {
+                case 1, 2 -> {
+                    txtConvertido.setText("" + conversorSeleccionado.convertir());
+                }
+                default ->
+                    txtConvertido.setText("");
             }
-            default ->
-                JOptionPane.showMessageDialog(null, "Seleccione un conversor a utilizar");
+
         }
-
-        conversorSeleccionado.setCantidad(cantidad);
-        conversorSeleccionado.setDe(de);
-        conversorSeleccionado.setA(a);
-        conversorSeleccionado.convertir();
-        
-        switch (tipoConversor) {
-            case 1, 2 -> {
-                txtConvertido.setText("" + conversorSeleccionado.convertir());
-            }
-            default -> txtConvertido.setText("");
-        }
-
-
     }//GEN-LAST:event_btnConvertirActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
